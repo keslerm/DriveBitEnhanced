@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 public class FitbitActivity
 {
-	public String activityId = "16010";
+	public String activityId = "16010"; // Hard coded for now
 	public DateTime startTime;
 	public Integer duration;
 
