@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import com.dasbiersec.drivebitenhanced.model.FitbitActivity;
+import com.dasbiersec.drivebitenhanced.domain.FitbitActivity;
 import com.dasbiersec.drivebitenhanced.util.ConfigReader;
 import net.danlew.android.joda.JodaTimeAndroid;
 import oauth.signpost.OAuth;
@@ -24,12 +24,12 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.joda.time.DateTime;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -199,9 +199,28 @@ public class MainActivity extends ActionBarActivity
 
 	}
 
-	public void post15Minutes(View view)
+	public void postActivity15Minutes(View view)
 	{
-		new PostActivity().execute(new FitbitActivity());
+		FitbitActivity activity = new FitbitActivity(new DateTime(), 15*60*1000);
+		new PostActivity().execute(activity);
+	}
+
+	public void postActivity30Minutes(View view)
+	{
+		FitbitActivity activity = new FitbitActivity(new DateTime(), 30*60*1000);
+		new PostActivity().execute(activity);
+	}
+
+	public void postActivity45Minutes(View view)
+	{
+		FitbitActivity activity = new FitbitActivity(new DateTime(), 45*60*1000);
+		new PostActivity().execute(activity);
+	}
+
+	public void postActivity60Minutes(View view)
+	{
+		FitbitActivity activity = new FitbitActivity(new DateTime(), 60*60*1000);
+		new PostActivity().execute(activity);
 	}
 
 	private class PostActivity extends AsyncTask<FitbitActivity, Void, String>
@@ -218,11 +237,11 @@ public class MainActivity extends ActionBarActivity
 				Log.d("PostActivity", "Running post");
 				HttpPost post = new HttpPost("https://api.fitbit.com/1/user/-/activities.json");
 
-				List<NameValuePair> values = new ArrayList<>();
-				values.add(new BasicNameValuePair("activityId", "16010"));
-				values.add(new BasicNameValuePair("startTime", "6:00"));
-				values.add(new BasicNameValuePair("date", "2015-04-10"));
-				values.add(new BasicNameValuePair("durationMillis", "36000"));
+				List<BasicNameValuePair> values = new ArrayList<>();
+				values.add(new BasicNameValuePair("activityId", activities[0].getActivityId()));
+				values.add(new BasicNameValuePair("startTime", activities[0].getFitbitStartTime()));
+				values.add(new BasicNameValuePair("date", activities[0].getFitbitStartDate()));
+				values.add(new BasicNameValuePair("durationMillis", String.valueOf(activities[0].getDuration())));
 
 				post.setEntity(new UrlEncodedFormEntity(values));
 

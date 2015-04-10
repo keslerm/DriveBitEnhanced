@@ -19,7 +19,7 @@ public class ConfigReader
 		{
 
 			AssetManager assetManager = context.getAssets();
-			InputStream inputStream = assetManager.open("main.properties");
+			InputStream inputStream = assetManager.open("config.properties");
 
 			properties = new Properties();
 			properties.load(inputStream);
