@@ -1,5 +1,8 @@
 package com.dasbiersec.drivebitenhanced.main;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -225,6 +228,15 @@ public class MainActivity extends ActionBarActivity
 
 	private class PostActivity extends AsyncTask<FitbitActivity, Void, String>
 	{
+		AlertDialog.Builder alertDialogBuilder;
+		ProgressDialog progressDialog;
+
+		@Override
+		protected void onPreExecute()
+		{
+			alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+			progressDialog = ProgressDialog.show(MainActivity.this, "Processing", "Please Wait", true);
+		}
 
 		@Override
 		public String doInBackground(FitbitActivity... activities)
@@ -259,13 +271,38 @@ public class MainActivity extends ActionBarActivity
 				}
 
 				Log.d("PostActivity", "Got to post the activity: " + sb.toString());
+
+
+				return "Activity posted successfully!";
+
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
 
-			return "Executed";
+			return "Activity failed to post.";
+		}
+
+		@Override
+		protected void onPostExecute(String result)
+		{
+			super.onPostExecute(result);
+
+			progressDialog.dismiss();
+
+			alertDialogBuilder.setTitle("Status");
+			alertDialogBuilder.setCancelable(true);
+			alertDialogBuilder.setMessage(result);
+			alertDialogBuilder.setPositiveButton("Ok",
+					new DialogInterface.OnClickListener()
+					{
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+						}
+					});
+			alertDialogBuilder.show();
 		}
 	}
 
